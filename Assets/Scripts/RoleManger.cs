@@ -162,7 +162,7 @@ public class RoleManger : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.Escape))
             {
-                if(System.DateTime.Now.Hour==16&&rejection)
+                if(System.DateTime.Now.Hour==21&&rejection)
                 {
                     rejection = false;
                     saying.Stop();
