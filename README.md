@@ -1,4 +1,4 @@
-![logo](https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202103%2F31%2F20210331142011_48a88.thumb.1000_0.jpg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1645777570&t=1545bdfe94b0702dea7b56bbceb54a0c)
+![logo](Assets\\Icon\\icon.jpeg)
 # Desktop Elves(桌面精灵程序)
 ## Version 1.0
 ## 作者:code-520(祈愿)
