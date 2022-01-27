@@ -5,7 +5,7 @@ using UnityEngine.Windows.Speech;
 
 public class Speech : MonoBehaviour
 {
-	private Dictionary<string, string> grammar;
+	private Dictionary<string, Datas.Actions> grammar;
 	private AudioSource saying;
 	private KeywordRecognizer keywordRecognizer;
     
@@ -23,18 +23,26 @@ public class Speech : MonoBehaviour
 	}
 	private void OnKeywordsRecognized(PhraseRecognizedEventArgs args)
 	{
-		string str = grammar[args.text];
-		if(str=="AddScale")
+		Datas.Actions temp = grammar[args.text];
+		if(temp.type==Datas.ActionType.GetBigger)
         {
 			ChangeSize(true);
         }
-		else if(str=="SubScale")
+		else if(temp.type==Datas.ActionType.GetSmaller)
         {
 			ChangeSize(false);
         }
-		else if(str.IndexOf("http")!=-1)
-		{
+		else if(temp.type==Datas.ActionType.OpenWebsite)
+        {
 			OpenWebsite(args.text);
+        }
+		else if(temp.type==Datas.ActionType.OpenProcess)
+        {
+			OpenProcess(args.text);
+        }
+		else if(temp.type==Datas.ActionType.OpenScript)
+        {
+			OpenScript(args.text);
         }
 		else
         {
@@ -43,15 +51,15 @@ public class Speech : MonoBehaviour
 	}
 	private void Says(string text)
     {
-		if (grammar[text].IndexOf('|') == -1)
+		if (grammar[text].value.IndexOf('|') == -1)
 		{
 			saying.Stop();
-			saying.clip = Resources.Load<AudioClip>(string.Format("Audio\\Keli\\{0}", grammar[text]));
+			saying.clip = Resources.Load<AudioClip>(string.Format("Audio\\Keli\\{0}", grammar[text].value));
 			saying.Play();
 		}
 		else
 		{
-			string[] target = grammar[text].Split('|');
+			string[] target = grammar[text].value.Split('|');
 			saying.Stop();
 			if (RoleManger.emotions.GetStatus() >= 2)
 			{
@@ -82,7 +90,16 @@ public class Speech : MonoBehaviour
     }
 	private void OpenWebsite(string text)
 	{
-		string[] ProcessAndUrl = grammar[text].Split('|');
+		string[] ProcessAndUrl = grammar[text].value.Split('|');
 		System.Diagnostics.Process.Start(ProcessAndUrl[0], ProcessAndUrl[1]);
 	}
+	private void OpenProcess(string text)
+    {
+		System.Diagnostics.Process.Start(grammar[text].value);
+    }
+	private void OpenScript(string text)
+    {
+		string path = Application.dataPath + "\\DLCScripts\\";
+		System.Diagnostics.Process.Start(path + grammar[text].value);
+    }
 }

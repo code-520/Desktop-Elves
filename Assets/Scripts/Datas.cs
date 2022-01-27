@@ -78,9 +78,9 @@ public class Datas : MonoBehaviour
             }
             return list.ToArray();
         }
-        public Dictionary<string,string> ToDictionary()
+        public Dictionary<string,Actions> ToDictionary()
         {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Dictionary<string, Actions> dict = new Dictionary<string, Actions>();
             foreach(var str in words)
             {
                 string[] keyAndValues = str.Split('-');
@@ -89,115 +89,65 @@ public class Datas : MonoBehaviour
                     string[] keys = keyAndValues[0].Split('|');
                     for(int i=0;i<keys.Length;i++)
                     {
-                        dict.Add(keys[i], keyAndValues[1]);
+                        Actions a = new Actions();
+                        a.Init(keyAndValues[1]);
+                        dict.Add(keys[i], a);
                     }
                 }
                 else
                 {
-                    dict.Add(keyAndValues[0], keyAndValues[1]);
+                    Actions a = new Actions();
+                    a.Init(keyAndValues[1]);
+                    dict.Add(keyAndValues[0], a);
                 }
             }
             return dict;
         }
     }
-    public struct Today
+    public struct Actions
     {
-        public string date;
-        public bool isToday;
-        public bool morning;
-        public bool afternoon;
-        public bool evening;
-        public void Init()
+        public string value;
+        public ActionType type;
+        public void Init(string text)
         {
-            date = DateTime.Now.ToString();
-            morning = false;
-            afternoon = false;
-            evening = false;
-            isToday = true;
+            value = text;
+            InitType();
         }
-        //每次启动跟新一次日期数据
-        //注意,若返回值为false,说明上次存储的数据有问题
-        public bool UpdateDatas()
+        public void InitType()
         {
-            DateTime now = DateTime.Now;
-            DateTime lastTime = Convert.ToDateTime(date);
-            if(now.Year==lastTime.Year)
+            if(value=="AddScale")
             {
-                if(now.Month==lastTime.Month)
-                {
-                    if(now.Day==lastTime.Day)
-                    {
-                        date = now.ToString();
-                    }
-                    else if(now.Day>lastTime.Day)
-                    {
-                        Init();
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else if(now.Month>lastTime.Month)
-                {
-                    Init();
-                }
-                else
-                {
-                    return false;
-                }
+                type = ActionType.GetBigger;
             }
-            else if(now.Year>lastTime.Year)
+            else if(value=="SubScale")
             {
-                Init();
+                type = ActionType.GetSmaller;
+            }
+            else if(value.IndexOf("http")!=-1)
+            {
+                type = ActionType.OpenWebsite;
+            }
+            else if(value.IndexOf(".exe")!=-1)
+            {
+                type = ActionType.OpenProcess;
+            }
+            else if(value.IndexOf(".bat")!=-1)
+            {
+                type = ActionType.OpenScript;
             }
             else
             {
-                return false;
+                type = ActionType.Say;
             }
-            return true;
-        }
-        //判断是否打招呼以及打招呼的语音
-        public bool IsGreeting(out int time)
-        {
-            time = -1;
-            if (isToday)
-            {
-                if (!morning&&DateTime.Now.Hour>=6&&DateTime.Now.Hour<=10)
-                {
-                    morning = true;
-                    time = 0;
-                }
-                else if (!afternoon&&DateTime.Now.Hour>=12&&DateTime.Now.Hour<=13)
-                {
-                    afternoon = true;
-                    time = 1;
-                }
-                else if (!evening&&DateTime.Now.Hour>=19&&DateTime.Now.Hour<=22)
-                {
-                    evening = true;
-                    time = 2;
-                }
-                else
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
         }
     }
-    //程序开头效果数据结构
-    public struct Welcome
+    public enum ActionType
     {
-        public float size;
-        public DateTime time;
-        public bool isWelcomed;
-        public void Init()
-        {
-            size = 0f;
-            time = DateTime.Now;
-            isWelcomed = false;
-        }
+        GetBigger=0,
+        GetSmaller,
+        OpenWebsite,
+        OpenProcess,
+        OpenScript,
+        Say
     }
 }

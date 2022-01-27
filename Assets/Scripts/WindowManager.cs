@@ -164,7 +164,7 @@ public class WindowManager : MonoBehaviour
         var posV3 = Camera.main.ScreenToWorldPoint(new Vector3(pos.x, pos.y, 10));
         
         RaycastHit2D hitInfo;
-        if ((hitInfo=Physics2D.Raycast(posV3,Vector2.zero))||Physics.Raycast(posV3,Vector3.forward))
+        if ((hitInfo=Physics2D.Raycast(posV3,Vector2.zero)))
         {
             // 鼠标进入角色范围
             isInRoleRect = true;

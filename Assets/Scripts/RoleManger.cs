@@ -9,7 +9,7 @@ public class RoleManger : MonoBehaviour
     public static Animator animator;
     
     private SayAll sayAll;
-    private Datas.Welcome welcome;
+    
     private bool rejection;
     private void Awake()
     {
@@ -21,7 +21,6 @@ public class RoleManger : MonoBehaviour
         saying.clip = Resources.Load<AudioClip>("Audio\\Keli\\Self-introduction");
         animator = GetComponent<Animator>();
         rejection = true;
-        welcome.Init();
         transform.localRotation = Quaternion.Euler(0, 180, 0);
         emotions = Datas.Emotions.Init();
         StartCoroutine("IsWelcoming");
