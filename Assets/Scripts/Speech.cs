@@ -99,7 +99,7 @@ public class Speech : MonoBehaviour
     }
 	private void OpenScript(string text)
     {
-		string path = Application.dataPath + "\\DLCScripts\\";
+		string path = Application.streamingAssetsPath + "\\DLCScripts\\";
 		System.Diagnostics.Process.Start(path + grammar[text].value);
     }
 }
